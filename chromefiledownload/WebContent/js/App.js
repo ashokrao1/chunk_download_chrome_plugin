@@ -86,7 +86,7 @@ jQuery(function($) {
 				 * if response code is 206 then the server supports chunked download
 				 * process with multiple thread
 				 */
-				if(xhr.statusCode().status === 206){
+				if(xhr.statusCode().status === 206 && xhr.getResponseHeader("Content-Length")){
 					//supports partial content
 					var sLength = xhr.getResponseHeader("Content-Length"),//bytes
 					iLength = parseInt(sLength),
@@ -191,6 +191,15 @@ jQuery(function($) {
 					 * Server doesnt support chunked download
 					 * fallback: do normal download
 					 **/
+					var link = document.createElement("a");
+
+					//append the hyperlink to document
+					document.body.appendChild(link);
+					link.href = this.url;
+					link.download = this.url.substring(this.url.lastIndexOf('/')+1);
+					//trigger download on the blob
+					link.click();
+					
 				}
 			}
 
